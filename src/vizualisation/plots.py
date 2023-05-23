@@ -10,7 +10,12 @@ def plot_trip_matching(result_df: gpd.GeoDataFrame) -> None:
         lon=scatter_df["point_geometry"].apply(lambda p: round(p.x, 5)),
         lat=scatter_df["point_geometry"].apply(lambda p: round(p.y, 5)),
     )
-
+    initial_view_latitude = round(
+        scatter_df.loc[scatter_df["observation"] == 1, "lat"].values[0], 3
+    )
+    initial_view_longitude = round(
+        scatter_df.loc[scatter_df["observation"] == 1, "lon"].values[0], 3
+    )
     path_df = result_df.assign(
         path=result_df["edges_geometry"].apply(lambda x: list(x.coords)),
         datetime=pd.to_datetime(result_df["unixtime"]),
@@ -19,8 +24,8 @@ def plot_trip_matching(result_df: gpd.GeoDataFrame) -> None:
         pdk.Deck(
             map_style=None,
             initial_view_state=pdk.ViewState(
-                latitude=52.38,
-                longitude=9.71,
+                latitude=initial_view_latitude,
+                longitude=initial_view_longitude,
                 zoom=11,
                 pitch=50,
             ),
